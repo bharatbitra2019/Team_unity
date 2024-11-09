@@ -17,6 +17,7 @@ CourseOutcome outcomes[MAX_OUTCOMES];
 int outcome_count = 0;
 
 
+
 void Team_unity_create() {
     if (outcome_count >= MAX_OUTCOMES) {
         printf("Cannot add more outcomes. Maximum limit reached.\n");
@@ -139,6 +140,26 @@ void display_outcomes() {
     printf("--------------------------------------------------------------------------\n");
 }
 
+void load_outcomes_from_file() {
+    FILE *file = fopen(FILENAME, "r");
+    if (file == NULL) {
+perror("Error opening file.Starting with an empty record.");
+
+return;
+}
+outcome_count = 0;
+
+        while (fscanf(file, "%[^,],%[^,],%[^,],%f,%f\n", 
+                outcomes[outcome_count].cour_out_code, 
+                outcomes[outcome_count].cour_id, 
+                outcomes[outcome_count].bloom_id, 
+                &outcomes[outcome_count].e_proficiency, 
+                &outcomes[outcome_count].e_attainment) == 5) {
+            outcome_count++;
+        }
+        fclose(file);
+display_outcomes();
+    }
 
 void Team_unity_bubble_sort() {
     for (int i = 0; i < outcome_count - 1; i++) {
@@ -291,6 +312,7 @@ void Team_unity_sort_algorithm_details() {
 
 int main() {
     int choice;
+    load_outcomes_from_file();
     char cour_out_code[20];
     while (1) {
         printf("\nCourse Outcome Management System\n");
